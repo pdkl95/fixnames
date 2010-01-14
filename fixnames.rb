@@ -1,14 +1,19 @@
 #!/bin/env ruby
 
-$LOAD_PATH << 'lib'
-require 'fixnames'
+# $LOAD_PATH << './lib'
+require 'lib/fixnames'
+
+FixFileNames.option = {
+  :adverts   => true,
+  :brackets  => true,
+  :checksums => true,
+  :verbose   => 3
+}
 
 count_change    = 0
 count_no_change = 0
 ARGV.each do |old|
-  puts "OLD --> \"#{old}\""
-  fixed = FixFileNames.fix old, @trim
-  puts "NEW ==> \"#{fixed}"
+  fixed = FixFileNames.fix(old)
       
   if old === fixed
     count_no_change += 1
