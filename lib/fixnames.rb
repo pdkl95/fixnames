@@ -41,6 +41,63 @@ class FixFileNames
                            [';',     '-'] ]
     }
   }
+
+  class FileSet
+    include ColorDebugMessages
+    
+    def initialize(opts=Hash.new)
+      @option = opts
+      @option[:verbose] ||= 0
+      
+      @changed   = 0
+      @unchanged = 0
+      @set       = Array.new
+      
+      @debug = {
+        :class_only => true,
+        :warn       => false,
+        :info       => false,
+        :debug      => false,
+      }
+      @debug[:warn]  = true if @option[:verbose] > 0
+      @debug[:info]  = true if @option[:verbose] > 1
+      @debug[:debug] = true if @option[:verbose] > 2
+      debug_flags @debug
+    end
+
+    def update_counter(changed)
+      if changed
+        @changed += 1
+      else
+        @unchanged += 1
+      end
+    end
+
+    def add(val)
+      @set << val
+      update_counter(val.changed?)
+    end
+
+    def move!
+      @set.each do |x|
+        x.move!
+      end
+    end
+
+    def summary_line(count, prefix='')
+      if count > 0
+        plural = (count == 1) ? '' : 's'
+        info "#{prefix}changed: #{count} name#{plural}"
+      end
+    end
+
+    def show_summary!
+      if @changed > 0 or @unchanged > 0
+        summary_line(@changed, '  ')
+        summary_line(@unchanged, 'un')
+      end
+    end
+  end
   
   class << self
     def option
@@ -63,6 +120,23 @@ class FixFileNames
       fixed = new(name, opts)
       fixed.to_s
     end
+
+    def fix_file(name, opts=Hash.new)
+      fixed = new(name, opts)
+      fixed.move!
+    end
+
+    def file_set
+      @file_set ||= FileSet.new(option)
+    end
+
+    def fix_files(list, opts=Hash.new)
+      list.each do |x|
+        file_set.add new(x, opts)
+      end
+      file_set.show_summary!
+      file_set.move!
+    end
   end
 
   attr_accessor :option, :pattern
@@ -71,6 +145,7 @@ class FixFileNames
     @name    = name.to_s
     @option  = self.class.option.merge(opts)
     @pattern = self.class.pattern.merge(pattern_opts)
+    @moved   = false
 
     option[:verbose] ||= 0
     
@@ -183,10 +258,31 @@ class FixFileNames
     
     info "OLD: \"#{@name}\""
     info "NEW: \"#{@fixed}\""
+    
+    @fixed
   end
 
   def to_s
-    fix_string
-    @fixed
+    @fixed_name ||= fix_string
+  end
+
+  def changed?
+    to_s != @name
+  end
+
+  def status
+    changed? ? "pretend" : "no change"
+  end
+
+  def moved?
+    @moved
+  end
+
+  def move!
+    return if moved?
+    info "move! (#{status})"
+    @moved = true
   end
 end
+
+
