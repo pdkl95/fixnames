@@ -1,5 +1,3 @@
-require 'facets/kernel/returning'
-
 class FixFileNames
   OPTIONS = [:advert_prefix, :brackets, :checksums, :dots, :expunge,
              :dots_to_spaces, :extra_characters, :replace]
