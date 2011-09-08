@@ -1,28 +1,48 @@
+# encoding: utf-8
+
 require 'rubygems'
 require 'rake'
 
 begin
   require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "fixnames"
-    gem.summary = %Q{filename cleanup for scripts}
-    gem.description = %Q{Cleans up filenames so they can easily be used 
+rescue LoadError
+  raise LoadError, "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+end
+
+Jeweler::Tasks.new do |gem|
+  gem.name = "fixnames"
+  gem.summary = %Q{filename cleanup for scripts}
+  gem.description = %Q{Cleans up filenames so they can easily be used 
 in scripts, without annoyances such as spaces or other bad characters }
-    gem.email = "git@thoughtnoise.net"
-    gem.homepage = "http://github.com/pdkl95/fixnames"
-    gem.authors = ["Brent Sanders"]
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+  gem.email = "git@thoughtnoise.net"
+  gem.homepage = "http://github.com/pdkl95/fixnames"
+  gem.author =["Brent Sanders"]
+  gem.license = "MIT"
+  gem.platform = Gem::Platform::RUBY
+  gem.bindir = "bin"
+  gem.executables = ["fixnames"]
+  gem.add_runtime_dependency "term-ansicolor", "~> 1.0.6"
+  gem.add_development_dependency "jeweler", "~> 1.6.4"
+end
+Jeweler::RubygemsDotOrgTasks.new
+
+require 'rake/testtask'
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'lib' << 'test'
+  test.pattern = 'test/**/test_*.rb'
+  test.verbose = true
+end
+
+begin
+  require 'rcov/rcovtask'
+  Rcov::RcovTask.new do |test|
+    test.libs << 'test'
+    test.pattern = 'test/**/test_*.rb'
+    test.verbose = true
+    test.rcov_opts << '--exclude "gems/*"'
   end
 rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+  # rcov is optional; ignore it if missing
 end
+task :default => :test
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "fixnames #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end

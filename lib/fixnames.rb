@@ -1,287 +1,224 @@
-require 'color_debug_messages'
+require 'term/ansicolor'
 
 class FixFileNames
-  include ColorDebugMessages
-  
   DEFAULT_OPTIONS = {
+    :hack_and   => false,
+    :semicolon  => false,
     :adverts    => false,
     :brackets   => false,
     :checksums  => false,
-    :fix_dots   => true,
-    :whitespace => true,
-    :camelcase  => true,
-    :downcase   => true,
-    :basic      => true,
+    :fix_dots   => false,
+    :camelcase  => false,
+    :downcase   => false,
+    :whitespace => " _",
+    :charstrip  => "[]{}',()+!~\#@",
+    :expunge    => nil,
+    :mendstr    => nil,
+    :nocolor    => false,
     :verbose    => 0
   }
 
-  DEFAULT_PATTERNS = {
-    :adverts => {
-      :replace_all => ['(^|[^a-z])(xxx|xvid|xvi_d|h264|dvdrip)([^a-z]|$)','\3'],
-      :remove_list => ['^\[[^\]]+\]'],
-      :remove_bracket_ranges => ['xvid', 'h264', 'divx', 'dual_audio']
-    },
-    :brackets => {
-      :remove_list => ['[\(\[].*?[\)\]]']
-    },
-    :checksums => {
-      :remove_list => ['\([0-9a-f]{8}\)', '\[[0-9a-f]{8}\]']
-    },
-    :whitespace => {
-      :replace_all  => ['__', '_'],
-      :remove_list  => ['^[_-]', '^-_', '_$'],
-      :replace_list => [ ['[_-]\.', '.'],
-                         [   '_-_', '-'] ]
-    },
-    :basic => {
-      :char_to_remove => "\[\]\{\}',\(\)+!~\#@",
-      :char_to_space  => " ",
-      :remove_list    => ['\(\w\w\)'],
-      :replace_list   => [ ['&', '_and_'],
-                           [';',     '-'] ]
-    }
-  }
+  class Color
+    extend Term::ANSIColor
 
-  class FileSet
-    include ColorDebugMessages
-    
-    def initialize(opts=Hash.new)
-      @option = opts
-      @option[:verbose] ||= 0
-      
-      @changed   = 0
-      @unchanged = 0
-      @set       = Array.new
-      
-      @debug = {
-        :class_only => true,
-        :warn       => false,
-        :info       => false,
-        :debug      => false,
-      }
-      @debug[:warn]  = true if @option[:verbose] > 0
-      @debug[:info]  = true if @option[:verbose] > 1
-      @debug[:debug] = true if @option[:verbose] > 2
-      debug_flags @debug
+    def self.prefix(chr, cname)
+      #raise "#{cname.inspect}, #{send(cname).inspect}"
+      [Color.send(cname), Color.bold, "#{chr}#{chr}>", Color.clear].join
     end
 
-    def update_counter(changed)
-      if changed
-        @changed += 1
-      else
-        @unchanged += 1
-      end
-    end
-
-    def add(val)
-      @set << val
-      update_counter(val.changed?)
-    end
-
-    def move!
-      @set.each do |x|
-        x.move!
-      end
-    end
-
-    def summary_line(count, prefix='')
-      if count > 0
-        plural = (count == 1) ? '' : 's'
-        info "#{prefix}changed: #{count} name#{plural}"
-      end
-    end
-
-    def show_summary!
-      if @changed > 0 or @unchanged > 0
-        summary_line(@changed, '  ')
-        summary_line(@unchanged, 'un')
-      end
+    def self.puts_msg(str, chr, cname)
+      puts "#{prefix(chr, cname)} #{str}"
     end
   end
-  
-  class << self
+
+  def bold(str)
+    [ Color.bold,
+      Color.yellow,
+      Color.on_blue,
+      str,
+      Color.clear
+    ].join
+  end
+
+  def warn(msg);  Color.puts_msg(msg, '*', :red)    if @option[:verbose] > 0 end
+  def note(msg);  Color.puts_msg(msg, '!', :yellow) if @option[:verbose] > 0 end
+  def info(msg);  Color.puts_msg(msg, '-', :green)  if @option[:verbose] > 1 end
+  def debug(msg); Color.puts_msg(msg, '>', :cyan)   if @option[:verbose] > 2 end
+
+  module ClassMethods
     def option
       @option ||= DEFAULT_OPTIONS
     end
 
     def option=(val)
       @option = option.merge(val)
-    end
-
-    def pattern
-      @pattern ||= DEFAULT_PATTERNS
-    end
-
-    def pattern=(val)
-      @pattern ||= pattern.merge(val)
-    end
-    
-    def fix(name, opts=Hash.new)
-      fixed = new(name, opts)
-      fixed.to_s
-    end
-
-    def fix_file(name, opts=Hash.new)
-      fixed = new(name, opts)
-      fixed.move!
-    end
-
-    def file_set
-      @file_set ||= FileSet.new(option)
-    end
-
-    def fix_files(list, opts=Hash.new)
-      list.each do |x|
-        file_set.add new(x, opts)
+      if option[:verbose] > 2
+        lines = @option.keys.map do |k|
+          "\t#{k.inspect} \t=> #{@option[k].inspect},"
+        end
+        lines.last.chop! if lines.length > 0
+        puts "FixFileNames.options = {\n#{lines.join("\n")}\n}"
       end
-      file_set.show_summary!
-      file_set.move!
+      @option
+    end
+
+    def fix!(name, opts=Hash.new)
+      fixed = new(name, opts)
+      fixed.fix!
+    end
+
+    def fix_files!(list, opts=Hash.new)
+      list.map do |x|
+        fix! x, opts
+      end
     end
   end
+  extend ClassMethods
 
-  attr_accessor :option, :pattern
-  
+  attr_reader :orig, :fixed, :option
+  alias_method :to_s, :fixed
+
   def initialize(name, opts=Hash.new, pattern_opts=Hash.new)
-    @name    = name.to_s
     @option  = self.class.option.merge(opts)
-    @pattern = self.class.pattern.merge(pattern_opts)
-    @moved   = false
-
     option[:verbose] ||= 0
-    
-    @debug = {
-      :class_only => true,
-      :warn       => false,
-      :info       => false,
-      :debug      => false,
-    }
-    @debug[:warn]  = true if option[:verbose] > 0
-    @debug[:info]  = true if option[:verbose] > 1
-    @debug[:debug] = true if option[:verbose] > 2
-    debug_flags @debug
-  end
+    option[:mendstr] ||= ''
 
-  def stat
-    @stat ||= File.stat(@name)
-  end
+    @orig  = name.to_s.dup
+    @fixed = @orig.dup
 
-  def pad(str, pad_len=24, c=' ')
-    len = pad_len - str.length
-    (len < 0) ? '' : (c * len)
-  end
-
-  def replace(re_string, replacement)
-    if replacement.length < 1
-      debug "Expunge: /#{re_string}/"
-    else
-      debug "Replace: /#{re_string}/ #{pad re_string}-> \"#{replacement}\""
-    end
-  end
-
-  def remove(re_string)
-    replace(re_string, '')
-  end
-
-  def replace_all(srch, repl)
-    loop while replace(srch, repl)
-  end
-
-  def each_pattern_opt(name)
-    if @pat_opt[name]
-      @pat_opt[name].each do |x|
-        yield(x)
+    option.keys.each do |optname|
+      if option[optname] and respond_to?(optname)
+        debug "FILTER[:#{optname}]"
+        old = fixed.dup
+        case method(optname).arity
+        when 1 then send optname, option[optname]
+        when 0 then send optname
+        else raise "Unsupported arity in ##{optname}"
+        end
+        if old != fixed
+          debug "\t    old -- #{old.inspect}"
+          debug "\t    new -- #{fixed.inspect}"
+        end
       end
     end
   end
 
-  def if_pattern_opt(name)
-    if @pat_opt[name]
-      yield(*(@pat_opt[name]))
+  #module Helpers # :nodoc:all
+    def stat
+      @stat ||= File.stat(orig)
     end
+
+    def pad(str, pad_len=24, c=' ')
+      len = pad_len - str.length
+      (len < 0) ? '' : (c * len)
+    end
+
+    def replace(re, replacement)
+      re_str = bold "/#{re}/"
+      replacement_str = bold "\"#{replacement}\""
+      debug "\t<replace>  #{re_str}  ->  #{replacement_str}"
+      fixed.gsub! Regexp.new(re), replacement
+    end
+
+    def remove(re)
+      re_str = bold "/#{re}/"
+      debug "\t<expunge>  #{re_str}"
+      fixed.gsub! Regexp.new(re), ''
+    end
+
+    def translate(src, dst)
+      debug "\t<translate>  #{bold src.inspect}  ->  #{bold dst.inspect}"
+      fixed.tr! src, dst
+    end
+
+    def remove_bracket_ranges(re)
+      remove "\\[.*?#{re}.*?\\]"
+    end
+  #end
+  #include Helpers
+
+  def hack_and
+    replace '&', '_and_'
   end
 
-  def filter(sym_name)
-    return unless option[sym_name] and pattern[sym_name]
-    @pat_opt = pattern[sym_name]
-    
-    if_pattern_opt(:replace_all) do |srch,repl|
-      replace_all(srch,repl)
-    end
+  def semicolon
+    translate ';', '-'
+  end
 
-    if_pattern_opt(:char_to_remove) do |x|
-      remove("[#{x}]")
-    end
+  def adverts
+    replace '(^|[^a-z])(xxx|xvid|xvi_d|h264|dvdrip)([^a-z]|$)', '\3'
+    remove  '^\[[^\]]+\]'
+    remove_bracket_ranges 'xvid'
+    remove_bracket_ranges 'h264'
+    remove_bracket_ranges 'divx'
+    remove_bracket_ranges 'dual_audio'
+  end
 
-    if_pattern_opt(:char_to_space) do |x|
-      replace("[#{x}]", '_')
-    end
+  def brackets
+    remove '[\(\[].*?[\)\]]'
+  end
 
-    each_pattern_opt(:remove_list) do |x|
-      remove(x)
-    end
-
-    each_pattern_opt(:remove_bracket_ranges) do |x|
-      remove("\[.*?#{x}.*?\]")
-    end
+  def checksums
+    replace '([0-9a-f]{8})', '\[[0-9a-f]{8}\]'
   end
 
   def downcase
-    @fixed = @fixed.downcase
-  end
-
-  def camelcase
-    replace('([a-z])([A-Z])', '\1_\2') if option[:camelcase]
+    translate 'A-Z', 'a-z'
   end
 
   def fix_dots
-    while @fixed.scan(/\./).size > 1
+    while fixed.scan(/\./).size > 1
       if stat.file?
         # leave last dot in regular files
-        replace('(.*)\.(.*\.)', '\1_\2')
+        replace '(.*)\.(.*\.)', '\1_\2'
       elsif stat.directory?
         # directories should be dot-free
-        replace('\.', '_')
+        replace '\.', '_'
       end
-    end    
+    end
   end
 
-  def fix_string
-    @fixed = @name.dup
-
-    [:camelcase, :downcase, :fix_dots].each do |name|
-      send(name) if option[name]
-    end
-
-    pattern.each_key do |name|
-      filter(name)
-    end
-    
-    info "OLD: \"#{@name}\""
-    info "NEW: \"#{@fixed}\""
-    
-    @fixed
+  def camelcase
+    replace '([a-z])([A-Z])', '\1_\2'
   end
 
-  def to_s
-    @fixed_name ||= fix_string
+  def whitespace
+    replace '__',     '_'
+    remove  '^[_-]'
+    remove  '^-_'
+    remove  '_$'
+    replace '[_-]\.', '.'
+    replace '_-_',    '-'
+  end
+
+  def charstrip(chrlist)
+    remove "[#{Regexp.escape chrlist}]"
+  end
+
+  def expunge(re)
+    replace re, @mendstr
   end
 
   def changed?
-    to_s != @name
+    fixed != orig
   end
 
-  def status
-    changed? ? "pretend" : "no change"
+  def collision?
+    File.exists? fixed
   end
 
-  def moved?
-    @moved
-  end
-
-  def move!
-    return if moved?
-    info "move! (#{status})"
-    @moved = true
+  def fix!
+    if changed?
+      if collision?
+        warn "NAME COLLISION: #{fixed.inspect}"
+      else
+        note "mv #{orig.inspect} #{fixed.inspect}"
+        File.rename orig, fixed unless option[:pretend]
+      end
+    else
+      info "no change: #{orig.inspect}"
+    end
+    self
   end
 end
 
