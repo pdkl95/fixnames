@@ -9,9 +9,9 @@ class FixFileNames
     :checksums  => false,
     :fix_dots   => false,
     :camelcase  => false,
-    :downcase   => false,
-    :whitespace => " _",
-    :charstrip  => "[]{}',()+!~\#@",
+    :lowercase  => false,
+    :whitespace => " \t_",
+    :charstrip  => "[]{}'\",()+!~@#/\\",
     :expunge    => nil,
     :mendstr    => nil,
     :nocolor    => false,
@@ -162,7 +162,7 @@ class FixFileNames
     replace '([0-9a-f]{8})', '\[[0-9a-f]{8}\]'
   end
 
-  def downcase
+  def lowercase
     translate 'A-Z', 'a-z'
   end
 
@@ -182,13 +182,15 @@ class FixFileNames
     replace '([a-z])([A-Z])', '\1_\2'
   end
 
-  def whitespace
-    replace '__',     '_'
-    remove  '^[_-]'
-    remove  '^-_'
-    remove  '_$'
-    replace '[_-]\.', '.'
-    replace '_-_',    '-'
+  def whitespace(chrlist)
+    replace "[#{Regexp.escape chrlist}]", '_'
+    replace '[_-]\.', '.' while fixed =~ /[_-]\./
+    replace '_-',     '-' while fixed =~ /_-/
+    replace '-_',     '-' while fixed =~ /-_/
+    replace '--',     '-' while fixed =~ /--/
+    remove  '^_'          while fixed =~ /^_/
+    remove  '_$'          while fixed =~ /_$/
+    replace '__',     '_' while fixed =~ /__/
   end
 
   def charstrip(chrlist)
