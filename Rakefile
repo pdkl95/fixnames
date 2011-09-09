@@ -1,4 +1,5 @@
 # encoding: utf-8
+# -*- mode: ruby -*-
 
 require 'rubygems'
 require 'bundler'
@@ -12,16 +13,18 @@ end
 require 'rake'
 
 require 'jeweler'
+require './lib/fixnames/version.rb'
 Jeweler::Tasks.new do |gem|
-  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "fixnames"
+  gem.version = Fixnames::Version::STRING
   gem.homepage = "http://github.com/pdkl95/fixnames"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Filename cleanup for script compatability}
+  gem.description = %Q{Cleans up filenames so they can easily be used
+in scripts, without annoyances such as spaces or other bad characters}
   gem.email = "git@thoughtnoise.net"
   gem.authors = ["Brent Sanders"]
-  # dependencies defined in Gemfile
+  gem.executables = ["fixnames", "fixdirs"]
 end
 Jeweler::RubygemsDotOrgTasks.new
 
