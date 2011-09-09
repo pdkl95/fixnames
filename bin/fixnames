@@ -5,7 +5,7 @@ require 'rubygems'
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 require 'fixnames'
 
-options = FixFileNames::DEFAULT_OPTIONS.dup
+options = Fixnames::DEFAULT_OPTIONS.dup
 optparse = OptionParser.new do |opts|
   opts.banner = "Filename fixer to enforce bash-friendly filenames"
   opts.define_head "Usage: #{$0} [options] <file> [<file> ... ]"
@@ -113,8 +113,6 @@ optparse.parse!
 filelist = ARGV
 filelist = Dir["*"] if ARGV.length < 1
 
-FixFileNames.option = options
-FixFileNames.fix_files! filelist
-
-
+Fixnames.option = options
+Fixnames.fix_files! filelist
 
