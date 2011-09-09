@@ -2,14 +2,6 @@
 # -*- mode: ruby -*-
 
 require 'rubygems'
-require 'bundler'
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
 require 'rake'
 
 require 'jeweler'
@@ -25,6 +17,10 @@ in scripts, without annoyances such as spaces or other bad characters}
   gem.email = "git@thoughtnoise.net"
   gem.authors = ["Brent Sanders"]
   gem.executables = ["fixnames", "fixdirs"]
+  gem.add_runtime_dependency "term-ansicolor", "~> 1.0.6"
+  gem.add_development_dependency "rspec", "~> 2.3.0"
+  gem.add_development_dependency "jeweler", "~> 1.6.4"
+  gem.add_development_dependency "rcov", ">= 0"
 end
 Jeweler::RubygemsDotOrgTasks.new
 

@@ -19,13 +19,21 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".document",
-    "Gemfile",
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
+    "bin/fixdirs",
+    "bin/fixnames",
+    "fixnames.gemspec",
     "lib/fixnames.rb",
-    "test/helper.rb",
-    "test/test_fixnames.rb"
+    "lib/fixnames/version.rb",
+    "spec/fixnames/charstrip_spec.rb",
+    "spec/fixnames/whitespace_spec.rb",
+    "spec/spec_helper.rb",
+    "spec/support/should_fix_helpers.rb",
+    "spec/test_hack_and.rb",
+    "spec/test_lowercase.rb",
+    "spec/test_semicolon.rb"
   ]
   s.homepage = "http://github.com/pdkl95/fixnames"
   s.licenses = ["MIT"]
@@ -38,21 +46,18 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<term-ansicolor>, ["~> 1.0.6"])
-      s.add_development_dependency(%q<shoulda>, [">= 0"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_development_dependency(%q<rspec>, ["~> 2.3.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
     else
       s.add_dependency(%q<term-ansicolor>, ["~> 1.0.6"])
-      s.add_dependency(%q<shoulda>, [">= 0"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_dependency(%q<rspec>, ["~> 2.3.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_dependency(%q<rcov>, [">= 0"])
     end
   else
     s.add_dependency(%q<term-ansicolor>, ["~> 1.0.6"])
-    s.add_dependency(%q<shoulda>, [">= 0"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+    s.add_dependency(%q<rspec>, ["~> 2.3.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
     s.add_dependency(%q<rcov>, [">= 0"])
   end
