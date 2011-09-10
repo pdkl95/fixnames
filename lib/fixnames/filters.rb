@@ -35,6 +35,12 @@ module Fixnames
       replace '(.*)\.(.*\.)', '\1_\2'
     end
 
+    def fix_dashes
+      fixed.squeeze! '-'
+      remove  '^-' while fixed =~ /^-/
+      remove  '-$' while fixed =~ /-$/
+    end
+
     def camelcase
       replace '([a-z])([A-Z])', '\1_\2'
       fixed.downcase!
@@ -47,7 +53,7 @@ module Fixnames
       replace '-_',     '-' while fixed =~ /-_/
       remove  '^_'          while fixed =~ /^_/
       remove  '_$'          while fixed =~ /_$/
-      fixed.squeeze! '_-'
+      fixed.squeeze! '_'
     end
 
     def charstrip(chrlist)

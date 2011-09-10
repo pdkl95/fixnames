@@ -10,6 +10,7 @@ module Fixnames
     :brackets   => false,
     :semicolon  => false,
     :fix_dots   => false,
+    :fix_dashes => false,
 
     :camelcase  => false,
     :lowercase  => false,
@@ -27,7 +28,8 @@ module Fixnames
 
     :filter_order => [ :expunge,
                        :hack_and, :checksums, :banners,
-                       :brackets, :semicolon, :fix_dots,
+                       :brackets, :semicolon,
+                       :fix_dots, :fix_dashes,
                        :camelcase, :lowercase,
                        :charstrip, :whitespace
                      ],

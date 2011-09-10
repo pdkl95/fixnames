@@ -37,6 +37,10 @@ optparse = OptionParser.new do |opts|
          'Trims excessive dots from files (before the .extention)'
           ) { |val| options[:fix_dots] = val }
 
+  opts.on('-D', '--[no-]dashes',
+         'Trims redundant dashes, and leading/trailing dashes'
+          ) { |val| options[:fix_dashes] = val }
+
   opts.on('-c', '--[no-]camelcase',
           'Undo camelCase with underscores. "aB" becomes "a_b"'
           ) { |val| options[:camelcase] = val }
