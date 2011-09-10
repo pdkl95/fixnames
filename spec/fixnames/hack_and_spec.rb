@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Fixnames do
-  context "using the hack-and filter" do
+  context "when option[:hack_and] is TRUE" do
     before do
       @testopt = { :hack_and => true }
     end
@@ -12,7 +12,7 @@ describe Fixnames do
     end
   end
 
-  context "hack-and filter is disabled" do
+  context "when option[:hack_and] is FALSE" do
     before do
       @testopt = { :hack_and => false }
     end

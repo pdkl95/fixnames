@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Fixnames do
-  context "using the semicolon filter" do
+  context "when option[:semicolon] is TRUE" do
     before do
       @testopt = { :semicolon => true }
     end
@@ -12,7 +12,7 @@ describe Fixnames do
     end
   end
 
-  context "semicolon filter is disabled" do
+  context "when option[:semicolon] is FALSE" do
     before do
       @testopt = { :semicolon => false }
     end

@@ -21,9 +21,9 @@ optparse = OptionParser.new do |opts|
           'Replace ";" with "-"'
           ) { |val| options[:semicolon] = val }
 
-  opts.on('-a', '--[no-]advert_prefix',
+  opts.on('-B', '--[no-]banners',
           'Trims [FOO] style advert prefixs from the beginning'
-          ) { |val| options[:adverts] = val }
+          ) { |val| options[:banners] = val }
 
   opts.on('-b', '--[no-]brackets',
          'Trims (round) or [square] bracket regions'
@@ -113,6 +113,5 @@ optparse.parse!
 filelist = ARGV
 filelist = Dir["*"] if ARGV.length < 1
 
-Fixnames.option = options
-Fixnames.fix_files! filelist
+Fixnames.fix_files! filelist, options
 
