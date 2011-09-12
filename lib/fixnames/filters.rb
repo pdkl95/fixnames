@@ -46,6 +46,14 @@ module Fixnames
       fixed.downcase!
     end
 
+    def junkwords(wordlist)
+      wordlist.each do |word|
+        replace "[_-]#{word}[_-]", '_'
+        remove  "[_-]#{word}$"
+        remove     "^#{word}[_-]"
+      end
+    end
+
     def whitespace(chrlist)
       replace "[#{Regexp.escape chrlist}]", '_'
       replace '[_-]\.', '.' while fixed =~ /[_-]\./

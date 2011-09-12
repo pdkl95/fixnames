@@ -1,21 +1,36 @@
 require 'fixnames/engine'
 
 module Fixnames
-  module Interface
-    def parse(name, opts=Hash.new)
+  module FixFile
+    def self.parse(name, opts=Hash.new)
       Engine.new(name, opts)
     end
 
-    def fix_name(*args)
+    def self.fix_name(*args)
       parse(*args).fixed
     end
 
-    def fix!(*args)
-      fixed = parse(*args)
-      fixed.fix!
+    def self.fix!(*args)
+      parse(*args).fix!
     end
 
-    def fix_files!(list, *args)
+    def self.fix_list!(list, *args)
+      list.map do |x|
+        fix! x, *args
+      end
+    end
+  end
+
+  module FixDir
+    def self.parse(name, opts=Hash.new)
+      Engine::ScanDir.new(name, opts)
+    end
+
+    def self.fix!(*args)
+      parse(*args).fix!
+    end
+
+    def self.fix_list!(list, *args)
       list.map do |x|
         fix! x, *args
       end

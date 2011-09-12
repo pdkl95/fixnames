@@ -1,6 +1,7 @@
 require 'fixnames/debug'
 require 'fixnames/helpers'
 require 'fixnames/filters'
+require 'fixnames/engine/scan_dir'
 
 module Fixnames
   class Engine
@@ -8,16 +9,22 @@ module Fixnames
     include Helpers
     include Filters
 
-    attr_reader :orig, :fixed, :option
+    attr_reader :orig, :fixed, :dir, :option
     alias_method :to_s, :fixed
 
-    def initialize(name, opts=Hash.new, pattern_opts=Hash.new)
+    def initialize(name, opts=Hash.new)
       @option = ::Fixnames::DEFAULT_OPTIONS.merge(opts)
 
       option[:verbose] ||= 0
       option[:mendstr] ||= ''
 
-      @orig  = name.to_s.dup
+      @dir  = File.dirname(name)
+      @orig = File.basename(name)
+
+      if option[:recursive] && File.directory?(@orig)
+        @scandir = ScanDir.new(@orig, option)
+      end
+
       @fixed = @orig.dup
 
       option[:filter_order].each do |optname|
@@ -37,24 +44,38 @@ module Fixnames
       end
     end
 
+    def orig_path
+      "#{dir}/#{orig}"
+    end
+
+    def fixed_path
+      "#{dir}/#{fixed}"
+    end
+
+    def scandir_changed?
+      @scandir ? @scandir.changed? : false
+    end
+
     def changed?
       fixed != orig
     end
 
     def collision?
-      File.exists? fixed
+      File.exists? fixed_path
     end
 
     def fix!
+      @scandir.fix! if @scandir
+
       if changed?
         if collision?
-          warn "NAME COLLISION: #{fixed.inspect}"
+          warn "NAME COLLISION: #{fixed_path.inspect}"
         else
-          note "mv #{orig.inspect} #{fixed.inspect}"
-          File.rename orig, fixed unless option[:pretend]
+          note "mv #{orig_path.inspect} #{fixed_path.inspect}"
+          File.rename orig_path, fixed_path unless option[:pretend]
         end
       else
-        info "no change: #{orig.inspect}"
+        info "no change: #{orig_path.inspect}"
       end
       self
     end

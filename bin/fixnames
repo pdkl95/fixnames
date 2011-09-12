@@ -5,10 +5,32 @@ require 'rubygems'
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
 require 'fixnames'
 
+$fixmode = $0 =~ /dir/ ? :dir : :file
+
 options = Fixnames::DEFAULT_OPTIONS.dup
+
+case $fixmode
+when :file
+  $banner = "Filename fixer to enforce bash-friendly filenames"
+when :dir
+  $banner = "Whole-directory filename fixer to enforce bash-friendly filenames"
+  options[:recursive] = true
+end
+
 optparse = OptionParser.new do |opts|
-  opts.banner = "Filename fixer to enforce bash-friendly filenames"
+  opts.banner = $banner
   opts.define_head "Usage: #{$0} [options] <file> [<file> ... ]"
+
+  opts.separator ''
+  opts.separator '  DIRECTORIES:'
+
+  opts.on('-g', '--glob=GLOB_STRING',
+          'Filename glob inside each directory (default: #{options[:glob]})'
+          ) { |val| options[:dir_glob] = val }
+
+  opts.on('-R', '--[no-]recursive',
+          'Recursively descend into directories'
+          ) { |val| options[:recursive] = val }
 
   opts.separator ''
   opts.separator '  FILTERS:'
@@ -85,8 +107,8 @@ optparse = OptionParser.new do |opts|
   opts.on('-f', '--full',
           'All filters are turned on!'
           ) do
-    options.each_pair do |k,v|
-      options[k] = true if options[k].eql?(false)
+    Fixnames::FLAG_FILTERS.each do |f|
+      options[f] = true
     end
   end
 
@@ -114,8 +136,13 @@ end
 
 optparse.parse!
 
-filelist = ARGV
-filelist = Dir["*"] if ARGV.length < 1
+if options[:verbose] > 2
+  puts "FIXMODE: #{$fixmode}"
+  puts "RECURSIVE: #{options[:recursive]}"
+end
 
-Fixnames.fix_files! filelist, options
+filelist = ARGV
+filelist = ["."] if ARGV.length < 1
+
+Fixnames::FixFile.fix_list! filelist, options
 

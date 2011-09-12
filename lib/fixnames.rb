@@ -1,5 +1,14 @@
 module Fixnames
+  FLAG_FILTERS = [ :hack_and, :checksums, :banners,
+                   :brackets, :semicolon,
+                   :camelcase, :lowercase,
+                   :fix_dots, :fix_dashes ]
+
   DEFAULT_OPTIONS = {
+    ####################
+    # filename options #
+    ####################
+
     :expunge => nil,
     :mendstr => nil,
 
@@ -15,6 +24,10 @@ module Fixnames
     :camelcase  => false,
     :lowercase  => false,
 
+    :junkwords  => [ 'x264', 'hdtv', '2hd',
+                     '720p', 'dvdrip'
+                   ],
+
     :charstrip  => "[]{}'\",()+!~@#/\\",
     :whitespace => " \t_",
 
@@ -27,12 +40,21 @@ module Fixnames
     :bracket_characters_close => '])}>',
 
     :filter_order => [ :expunge,
-                       :hack_and, :checksums, :banners,
-                       :brackets, :semicolon,
-                       :fix_dots, :fix_dashes,
-                       :camelcase, :lowercase,
+                       FLAG_FILTERS,
+                       :junkwords,
                        :charstrip, :whitespace
-                     ],
+                     ].flatten,
+
+    ###############
+    # dir options #
+    ###############
+
+    :dir_glob  => '*',
+    :recursive => false,
+
+    ##################
+    # global options #
+    ##################
 
     :nocolor => false,
     :verbose => 0
@@ -42,7 +64,6 @@ module Fixnames
   include Debug
 
   require 'fixnames/interface'
-  extend Interface
 end
 
 
