@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Fixnames do
   context "when option[:brackets] is TRUE" do
     before do
-      @testopt = { :brackets => true }
+      @testopt.brackets = true
     end
 
     describe "should remove bracket expressions" do
@@ -15,7 +15,8 @@ describe Fixnames do
 
   context "when option[:brackets] is FALSE" do
     before do
-      @testopt = { :brackets => false, :charstrip_allow_brackets => true }
+      @testopt.brackets = false
+      @testopt.charstrip_allow_brackets = true
     end
 
     describe "should replace ALLOW bracket expressions" do

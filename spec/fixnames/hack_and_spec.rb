@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Fixnames do
   context "when option[:hack_and] is TRUE" do
     before do
-      @testopt = { :hack_and => true }
+      @testopt.hack_and = true
     end
 
     describe "should replace \"&\" with \"_and_\"" do
@@ -14,7 +14,7 @@ describe Fixnames do
 
   context "when option[:hack_and] is FALSE" do
     before do
-      @testopt = { :hack_and => false }
+      @testopt.hack_and = false
     end
 
     describe "should replace ALLOW \"&\"" do

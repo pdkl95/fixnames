@@ -25,19 +25,19 @@ module Fixnames
     end
 
     def warn(msg)
-      Color.puts_msg(msg, '*', :red)    if @option[:verbose] > 0
+      Color.puts_msg(msg, '*', :red)    if @option.verbose > 0
     end
 
     def note(msg)
-      Color.puts_msg(msg, '!', :yellow) if @option[:verbose] > 0
+      Color.puts_msg(msg, '!', :yellow) if @option.verbose > 0
     end
 
     def info(msg)
-      Color.puts_msg(msg, '-', :green)  if @option[:verbose] > 1
+      Color.puts_msg(msg, '-', :green)  if @option.verbose > 1
     end
 
     def debug(msg)
-      Color.puts_msg(msg, '>', :cyan)   if @option[:verbose] > 2
+      Color.puts_msg(msg, '>', :cyan)   if @option.verbose > 2
     end
   end
 end

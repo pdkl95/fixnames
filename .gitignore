@@ -10,3 +10,6 @@ rdoc
 # jeweler generated
 pkg
 
+# yard generated
+doc
+.yardoc

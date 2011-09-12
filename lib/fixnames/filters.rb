@@ -1,7 +1,7 @@
 module Fixnames
   module Filters
     def expunge(re)
-      replace re, option[:mendstr]
+      replace re, option.mendstr
     end
 
     def hack_and
@@ -10,10 +10,11 @@ module Fixnames
 
     def semicolon
       translate ';', '-'
+      fixed.squeeze! '-'
     end
 
     def banners
-      option[:banner_types].each do |x|
+      option.banner_types.each do |x|
         remove_bracket_ranges(x)
       end
     end
@@ -65,7 +66,7 @@ module Fixnames
     end
 
     def charstrip(chrlist)
-      re = Regexp.escape( if option[:charstrip_allow_brackets]
+      re = Regexp.escape( if option.charstrip_allow_brackets
                             remove_bracket_characters_from(chrlist)
                           else
                             chrlist

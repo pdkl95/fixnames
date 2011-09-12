@@ -7,11 +7,11 @@ module Fixnames
         @name = File.realpath(dirname)
         raise "Not a directory: #{name}" unless File.directory?(name)
 
-        @option = ::Fixnames::DEFAULT_OPTIONS.merge(opts)
+        @option = opts
       end
 
       def glob_str
-        "#{name}/#{option[:dir_glob]}"
+        "#{name}/#{option.dir_glob}"
       end
 
       def files

@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Fixnames do
   context "when option[:checksums] is TRUE" do
     before do
-      @testopt = { :checksums => true }
+      @testopt.checksums = true
     end
 
     describe "should remove [1A2B3C4D] style checksum markers" do
@@ -16,7 +16,8 @@ describe Fixnames do
 
   context "when option[:checksums] is FALSE" do
     before do
-      @testopt = { :checksums => false, :charstrip_allow_brackets => true }
+      @testopt.checksums = false
+      @testopt.charstrip_allow_brackets = true
     end
 
     describe "should allow checksum markers" do

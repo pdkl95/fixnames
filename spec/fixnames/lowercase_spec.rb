@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Fixnames do
   context "when option[:lowercase] is TRUE" do
     before do
-      @testopt = { :lowercase => true }
+      @testopt.lowercase = true
     end
 
     describe "should allow lowercase" do
@@ -18,7 +18,7 @@ describe Fixnames do
 
   context "when option[:lowercase] is FALSE" do
     before do
-      @testopt = { :lowercase => false }
+      @testopt.lowercase = false
     end
 
     describe "should ALLOW uppercase" do

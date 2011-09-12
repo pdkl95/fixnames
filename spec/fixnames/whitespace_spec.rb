@@ -2,10 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Fixnames do
   context "when option[:whitespace] is non-nil" do
-    before do
-      @testopt = { }
-    end
-
     describe "should preserve simple names" do
       it_should_not_change 'abc', 'a-b', 'a.b'
     end

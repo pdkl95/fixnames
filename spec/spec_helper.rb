@@ -8,7 +8,8 @@ require 'fixnames'
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
-  
+  config.before do
+    @testopt = Fixnames::Option.new
+  end
 end
 
-#    Fixnames.new str, Fixnames::DEFAULT_OPTIONS.merge(fixopt_global).merge(@testopt)

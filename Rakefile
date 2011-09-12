@@ -18,6 +18,7 @@ in scripts, without annoyances such as spaces or other bad characters}
   gem.authors = ["Brent Sanders"]
   gem.executables = ["fixnames", "fixdirs"]
   gem.add_runtime_dependency "term-ansicolor", "~> 1.0.6"
+  gem.add_development_dependency "yard", "~> 0.6.0"
   gem.add_development_dependency "rspec", "~> 2.3.0"
   gem.add_development_dependency "jeweler", "~> 1.6.4"
   gem.add_development_dependency "rcov", ">= 0"
@@ -37,12 +38,12 @@ end
 
 task :default => :spec
 
-#require 'rake/rdoctask'
-#Rake::RDocTask.new do |rdoc|
-#  version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
-#  rdoc.rdoc_dir = 'rdoc'
-#  rdoc.title = "fixnames #{version}"
-#  rdoc.rdoc_files.include('README*')
-#  rdoc.rdoc_files.include('lib/**/*.rb')
-#end
+require 'yard'
+YARD::Rake::YardocTask.new do |t|
+  t.files = ['lib/**/*.rb']
+  t.files += ['bin/*']
+  #t.files += ['spec/**/*_spec.rb']
+  #t.options += ['--plugin', 'yard-rspec']
+  t.options += ['--markup', 'markdown']
+  t.options += ['--debug']
+end

@@ -2,10 +2,12 @@ require 'fixnames/engine'
 
 module Fixnames
   module FixFile
-    def self.parse(name, opts=Hash.new)
+    def self.parse(name, opts)
       Engine.new(name, opts)
     end
 
+    # Returns the fixed version of a filename, without
+    # actually changing anything on the filesystem.
     def self.fix_name(*args)
       parse(*args).fixed
     end
@@ -22,7 +24,7 @@ module Fixnames
   end
 
   module FixDir
-    def self.parse(name, opts=Hash.new)
+    def self.parse(name, optsw)
       Engine::ScanDir.new(name, opts)
     end
 

@@ -1,5 +1,5 @@
 module Fixnames
-  module Helpers # :nodoc:all
+  module Helpers
     def replace(re, replacement)
       re_str = bold "/#{re}/"
       replacement_str = bold "\"#{replacement}\""
@@ -19,11 +19,11 @@ module Fixnames
     end
 
     def match_bracket_open
-      "[#{Regexp.escape(option[:bracket_characters_open])}]"
+      "[#{Regexp.escape(option.bracket_characters_open)}]"
     end
 
     def match_bracket_close
-      "[#{Regexp.escape(option[:bracket_characters_close])}]"
+      "[#{Regexp.escape(option.bracket_characters_close)}]"
     end
 
     def wrap_brackets(re)

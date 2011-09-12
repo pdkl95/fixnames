@@ -12,7 +12,6 @@ describe Fixnames do
       it_should_fix 'a{b', 'a}b'
       it_should_fix 'a(b', 'a)b'
       it_should_fix 'a\'b', 'a"b'
-      it_should_fix 'a/b', "a\\b"
       it_should_fix 'a,b', 'a+b'
       it_should_fix 'a!b', 'a~b'
       it_should_fix 'a#b', 'a@b'

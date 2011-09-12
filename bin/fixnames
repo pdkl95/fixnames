@@ -7,14 +7,14 @@ require 'fixnames'
 
 $fixmode = $0 =~ /dir/ ? :dir : :file
 
-options = Fixnames::DEFAULT_OPTIONS.dup
+options = Fixnames::Option.new
 
 case $fixmode
 when :file
   $banner = "Filename fixer to enforce bash-friendly filenames"
 when :dir
   $banner = "Whole-directory filename fixer to enforce bash-friendly filenames"
-  options[:recursive] = true
+  options.recursive = true
 end
 
 optparse = OptionParser.new do |opts|
@@ -26,80 +26,80 @@ optparse = OptionParser.new do |opts|
 
   opts.on('-g', '--glob=GLOB_STRING',
           'Filename glob inside each directory (default: #{options[:glob]})'
-          ) { |val| options[:dir_glob] = val }
+          ) { |val| options.dir_glob = val }
 
   opts.on('-R', '--[no-]recursive',
           'Recursively descend into directories'
-          ) { |val| options[:recursive] = val }
+          ) { |val| options.recursive = val }
 
   opts.separator ''
   opts.separator '  FILTERS:'
 
   opts.on('-A', '--[no-]hack_and',
           'Replace "&" with "_and_"'
-          ) { |val| options[:hack_and] = val }
+          ) { |val| options.hack_and = val }
 
   opts.on('-C', '--[no-]semicolon',
           'Replace ";" with "-"'
-          ) { |val| options[:semicolon] = val }
+          ) { |val| options.semicolon = val }
 
   opts.on('-B', '--[no-]banners',
           'Trims [FOO] style advert prefixs from the beginning'
-          ) { |val| options[:banners] = val }
+          ) { |val| options.banners = val }
 
   opts.on('-b', '--[no-]brackets',
          'Trims (round) or [square] bracket regions'
-          ) { |val| options[:brackets] = val }
+          ) { |val| options.brackets = val }
 
   opts.on('-k', '--[no-]checksums',
          'Trims [0A1B2C3D] CRC32 checksums from names. ( [] or () )'
-          ) { |val| options[:checksums] = val }
+          ) { |val| options.checksums = val }
 
   opts.on('-d', '--[no-]dots',
          'Trims excessive dots from files (before the .extention)'
-          ) { |val| options[:fix_dots] = val }
+          ) { |val| options.fix_dots = val }
 
   opts.on('-D', '--[no-]dashes',
          'Trims redundant dashes, and leading/trailing dashes'
-          ) { |val| options[:fix_dashes] = val }
+          ) { |val| options.fix_dashes = val }
 
   opts.on('-c', '--[no-]camelcase',
           'Undo camelCase with underscores. "aB" becomes "a_b"'
-          ) { |val| options[:camelcase] = val }
+          ) { |val| options.camelcase = val }
 
   opts.on('-l', '--[no-]lowercase',
           'Forces all letters to lowercase'
-          ) { |val| options[:lowercase] = val }
+          ) { |val| options.lowercase = val }
 
   opts.separator ''
   opts.separator '  CHARACTERS:'
 
   opts.on('-w', '--whitespace=CHARLIST',
           "Characters to treat as whitespace, to be replaced with underscores."
-          ) { |val| options[:whitespace] = val }
+          ) { |val| options.whitespace = val }
 
   opts.on('-W', '--no-whitespace',
           'Do not parse any character as whitespace'
-          ) {       options[:whitespace] = nil }
+          ) {       options.whitespace = nil }
 
   opts.on('-s', '--strip=CHARLIST',
-          "Characters to strip from names. default: #{options[:charstrip]}"
-          ) { |val| options[:charstrip] = val }
+          "Characters to strip from names. default: #{options.charstrip}"
+          ) { |val| options.charstrip = val }
 
   opts.on('-S', '--no-strip',
           'Do not strip any specific characters'
-          ) {       options[:charstrip] = nil }
+          ) {       options.charstrip = nil }
 
   opts.separator ''
   opts.separator '  REGEX-REPLACE:'
 
   opts.on('-x', '--expunge=REGEX',
           'Expung a regexp from all filenames'
-          ) { |val| options[:expunge] = val }
+          ) { |val| options.expunge = val }
 
   opts.on('-r', '--replace=STRING',
           'Replace expunged text with'
-          ) { |val| options[:mendstr] = val }
+          ) { |val| options.mendstr = val }
 
   opts.separator ''
   opts.separator '  COLLECTIONS:'
@@ -107,8 +107,8 @@ optparse = OptionParser.new do |opts|
   opts.on('-f', '--full',
           'All filters are turned on!'
           ) do
-    Fixnames::FLAG_FILTERS.each do |f|
-      options[f] = true
+    Fixnames::Option::FLAG_FILTERS.each do |f|
+      options.send(f, true)
     end
   end
 
@@ -117,11 +117,11 @@ optparse = OptionParser.new do |opts|
 
   opts.on('-p', '--pretend',
           'Pretend to run; no filesystem changes are made'
-          ) {       options[:pretend] = true }
+          ) {       options.pretend = true }
 
   opts.on('-v', '--verbose',
           'Verbose mode -- repeat for more output'
-          ) {       options[:verbose] += 1 }
+          ) {       options.verbose += 1 }
 
   Term::ANSIColor::coloring = STDOUT.isatty
   opts.on('-n', '--no-color',
@@ -136,9 +136,8 @@ end
 
 optparse.parse!
 
-if options[:verbose] > 2
+if options.verbose > 2
   puts "FIXMODE: #{$fixmode}"
-  puts "RECURSIVE: #{options[:recursive]}"
 end
 
 filelist = ARGV

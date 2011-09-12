@@ -1,5 +1,5 @@
 def fixed_for(x)
-  Fixnames.fix_name x, Fixnames::DEFAULT_OPTIONS.merge(@testopt || { })
+  Fixnames::FixFile.fix_name x, @testopt
 end
 
 def it_should_not_change(*args)

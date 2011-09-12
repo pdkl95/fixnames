@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Fixnames do
   context "when option[:fix_dots] is TRUE" do
     before do
-      @testopt = { :fix_dots => true }
+      @testopt.fix_dots = true
     end
 
     describe "should replace early dots with underbars" do
@@ -19,7 +19,7 @@ describe Fixnames do
 
   context "when option[:fix_dots] is FALSE" do
     before do
-      @testopt = { :fix_dots => false }
+      @testopt.fix_dots = false
     end
 
     describe "should allow multiple dots" do
