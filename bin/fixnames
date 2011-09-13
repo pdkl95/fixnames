@@ -37,6 +37,7 @@ optparse = OptionParser.new do |opts|
 
   opts.on('-A', '--[no-]hack_and',
           'Replace "&" with "_and_"'
+<<<<<<< HEAD
           ) { |val| options.hack_and = val }
 
   opts.on('-C', '--[no-]semicolon',
@@ -70,12 +71,44 @@ optparse = OptionParser.new do |opts|
   opts.on('-l', '--[no-]lowercase',
           'Forces all letters to lowercase'
           ) { |val| options.lowercase = val }
+=======
+          ) { |val| options[:hack_and] = val }
+
+  opts.on('-C', '--[no-]semicolon',
+          'Replace ";" with "-"'
+          ) { |val| options[:semicolon] = val }
+
+  opts.on('-a', '--[no-]advert_prefix',
+          'Trims [FOO] style advert prefixs from the beginning'
+          ) { |val| options[:adverts] = val }
+
+  opts.on('-b', '--[no-]brackets',
+         'Trims (round) or [square] bracket regions'
+          ) { |val| options[:brackets] = val }
+
+  opts.on('-k', '--[no-]checksums',
+         'Trims [0A1B2C3D] CRC32 checksums from names. ( [] or () )'
+          ) { |val| options[:checksums] = val }
+
+  opts.on('-d', '--[no-]dots',
+         'Trims excessive dots from files (before the .extention)'
+          ) { |val| options[:fix_dots] = val }
+
+  opts.on('-c', '--[no-]camelcase',
+          'Undo camelCase with underscores. "aB" becomes "a_b"'
+          ) { |val| options[:camelcase] = val }
+
+  opts.on('-l', '--[no-]lowercase',
+          'Forces all letters to lowercase'
+          ) { |val| options[:lowercase] = val }
+>>>>>>> ee714172b04ea4086348be1f0a4350a6807a9f09
 
   opts.separator ''
   opts.separator '  CHARACTERS:'
 
   opts.on('-w', '--whitespace=CHARLIST',
           "Characters to treat as whitespace, to be replaced with underscores."
+<<<<<<< HEAD
           ) { |val| options.whitespace = val }
 
   opts.on('-W', '--no-whitespace',
@@ -89,17 +122,40 @@ optparse = OptionParser.new do |opts|
   opts.on('-S', '--no-strip',
           'Do not strip any specific characters'
           ) {       options.charstrip = nil }
+=======
+          ) { |val| options[:whitespace] = val }
+
+  opts.on('-W', '--no-whitespace',
+          'Do not parse any character as whitespace'
+          ) {       options[:whitespace] = nil }
+
+  opts.on('-s', '--strip=CHARLIST',
+          "Characters to strip from names. default: #{options[:charstrip]}"
+          ) { |val| options[:charstrip] = val }
+
+  opts.on('-S', '--no-strip',
+          'Do not strip any specific characters'
+          ) {       options[:charstrip] = nil }
+>>>>>>> ee714172b04ea4086348be1f0a4350a6807a9f09
 
   opts.separator ''
   opts.separator '  REGEX-REPLACE:'
 
   opts.on('-x', '--expunge=REGEX',
           'Expung a regexp from all filenames'
+<<<<<<< HEAD
           ) { |val| options.expunge = val }
 
   opts.on('-r', '--replace=STRING',
           'Replace expunged text with'
           ) { |val| options.mendstr = val }
+=======
+          ) { |val| options[:expunge] = val }
+
+  opts.on('-r', '--replace=STRING',
+          'Replace expunged text with'
+          ) { |val| options[:mendstr] = val }
+>>>>>>> ee714172b04ea4086348be1f0a4350a6807a9f09
 
   opts.separator ''
   opts.separator '  COLLECTIONS:'
@@ -107,8 +163,13 @@ optparse = OptionParser.new do |opts|
   opts.on('-f', '--full',
           'All filters are turned on!'
           ) do
+<<<<<<< HEAD
     Fixnames::Option::FLAG_FILTERS.each do |f|
       options.send(f, true)
+=======
+    options.each_pair do |k,v|
+      options[k] = true if options[k].eql?(false)
+>>>>>>> ee714172b04ea4086348be1f0a4350a6807a9f09
     end
   end
 
@@ -117,11 +178,19 @@ optparse = OptionParser.new do |opts|
 
   opts.on('-p', '--pretend',
           'Pretend to run; no filesystem changes are made'
+<<<<<<< HEAD
           ) {       options.pretend = true }
 
   opts.on('-v', '--verbose',
           'Verbose mode -- repeat for more output'
           ) {       options.verbose += 1 }
+=======
+          ) {       options[:pretend] = true }
+
+  opts.on('-v', '--verbose',
+          'Verbose mode -- repeat for more output'
+          ) {       options[:verbose] += 1 }
+>>>>>>> ee714172b04ea4086348be1f0a4350a6807a9f09
 
   Term::ANSIColor::coloring = STDOUT.isatty
   opts.on('-n', '--no-color',
@@ -136,6 +205,7 @@ end
 
 optparse.parse!
 
+<<<<<<< HEAD
 if options.verbose > 2
   puts "FIXMODE: #{$fixmode}"
 end
@@ -144,4 +214,13 @@ filelist = ARGV
 filelist = ["."] if ARGV.length < 1
 
 Fixnames::FixFile.fix_list! filelist, options
+=======
+filelist = ARGV
+filelist = Dir["*"] if ARGV.length < 1
+
+FixFileNames.option = options
+FixFileNames.fix_files! filelist
+
+
+>>>>>>> ee714172b04ea4086348be1f0a4350a6807a9f09
 

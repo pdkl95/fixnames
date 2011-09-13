@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 lib/**/*.rb
 bin/*
 - 
 features/**/*.feature
 LICENSE.txt
+=======
+README.rdoc
+lib/**/*.rb
+bin/*
+features/**/*.feature
+LICENSE
+>>>>>>> ee714172b04ea4086348be1f0a4350a6807a9f09
