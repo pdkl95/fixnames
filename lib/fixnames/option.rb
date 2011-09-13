@@ -94,7 +94,7 @@ module Fixnames
 
     # A generic pattern to remove from all filenames.
     # @note Enables {Fixnames::Filters#expunge}
-    mkopt :expunge, Regexp, nil
+    mkopt :expunge, String, nil
 
     # After we {#expunge} a pattern, it is replaced with this string.
     mkopt :mendstr, String, DEFAULT_MENDSTR

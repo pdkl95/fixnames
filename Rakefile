@@ -1,8 +1,12 @@
 # encoding: utf-8
 # -*- mode: ruby -*-
 
-require 'rubygems'
 require 'rake'
+begin
+  require 'psych'
+rescue ::LoadError
+end
+require 'yaml'
 
 require 'jeweler'
 require './lib/fixnames/version.rb'
@@ -17,10 +21,10 @@ in scripts, without annoyances such as spaces or other bad characters}
   gem.email = "git@thoughtnoise.net"
   gem.authors = ["Brent Sanders"]
   gem.executables = ["fixnames", "fixdirs"]
-  gem.add_runtime_dependency "term-ansicolor", "~> 1.0.6"
-  gem.add_development_dependency "yard", "~> 0.6.0"
-  gem.add_development_dependency "rspec", "~> 2.3.0"
-  gem.add_development_dependency "jeweler", "~> 1.6.4"
+  gem.add_runtime_dependency "term-ansicolor", ">= 1.0.6"
+  gem.add_development_dependency "yard", ">= 0.6.0"
+  gem.add_development_dependency "rspec", ">= 2.3.0"
+  gem.add_development_dependency "jeweler", ">= 1.6.4"
   gem.add_development_dependency "rcov", ">= 0"
 end
 Jeweler::RubygemsDotOrgTasks.new
@@ -38,12 +42,12 @@ end
 
 task :default => :spec
 
-require 'yard'
-YARD::Rake::YardocTask.new do |t|
-  t.files = ['lib/**/*.rb']
-  t.files += ['bin/*']
-  #t.files += ['spec/**/*_spec.rb']
-  #t.options += ['--plugin', 'yard-rspec']
-  t.options += ['--markup', 'markdown']
-  t.options += ['--debug']
-end
+# require 'yard'
+# YARD::Rake::YardocTask.new do |t|
+#   t.files = ['lib/**/*.rb']
+#   t.files += ['bin/*']
+#   #t.files += ['spec/**/*_spec.rb']
+#   #t.options += ['--plugin', 'yard-rspec']
+#   t.options += ['--markup', 'markdown']
+#   t.options += ['--debug']
+# end

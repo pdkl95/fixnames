@@ -5,35 +5,48 @@
 
 Gem::Specification.new do |s|
   s.name = "fixnames"
-  s.version = "0.1.0.pre1"
+  s.version = "0.2.1"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brent Sanders"]
-  s.date = "2011-09-09"
+  s.date = "2011-09-13"
   s.description = "Cleans up filenames so they can easily be used\nin scripts, without annoyances such as spaces or other bad characters"
   s.email = "git@thoughtnoise.net"
   s.executables = ["fixnames", "fixdirs"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
-    "README.rdoc"
+    "README.md"
   ]
   s.files = [
     ".document",
+    ".rspec",
     "LICENSE.txt",
-    "README.rdoc",
+    "README.md",
     "Rakefile",
     "bin/fixdirs",
     "bin/fixnames",
     "fixnames.gemspec",
     "lib/fixnames.rb",
+    "lib/fixnames/debug.rb",
+    "lib/fixnames/engine.rb",
+    "lib/fixnames/engine/scan_dir.rb",
+    "lib/fixnames/filters.rb",
+    "lib/fixnames/helpers.rb",
+    "lib/fixnames/interface.rb",
+    "lib/fixnames/option.rb",
     "lib/fixnames/version.rb",
+    "spec/fixnames/banners_spec.rb",
+    "spec/fixnames/brackets_spec.rb",
+    "spec/fixnames/camelcase_spec.rb",
     "spec/fixnames/charstrip_spec.rb",
+    "spec/fixnames/checksums_spec.rb",
+    "spec/fixnames/fixdots_spec.rb",
+    "spec/fixnames/hack_and_spec.rb",
+    "spec/fixnames/lowercase_spec.rb",
+    "spec/fixnames/semicolon_spec.rb",
     "spec/fixnames/whitespace_spec.rb",
     "spec/spec_helper.rb",
-    "spec/support/should_fix_helpers.rb",
-    "spec/test_hack_and.rb",
-    "spec/test_lowercase.rb",
-    "spec/test_semicolon.rb"
+    "spec/support/should_fix_helpers.rb"
   ]
   s.homepage = "http://github.com/pdkl95/fixnames"
   s.licenses = ["MIT"]
@@ -45,20 +58,23 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<term-ansicolor>, ["~> 1.0.6"])
-      s.add_development_dependency(%q<rspec>, ["~> 2.3.0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
+      s.add_runtime_dependency(%q<term-ansicolor>, [">= 1.0.6"])
+      s.add_development_dependency(%q<yard>, [">= 0.6.0"])
+      s.add_development_dependency(%q<rspec>, [">= 2.3.0"])
+      s.add_development_dependency(%q<jeweler>, [">= 1.6.4"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
     else
-      s.add_dependency(%q<term-ansicolor>, ["~> 1.0.6"])
-      s.add_dependency(%q<rspec>, ["~> 2.3.0"])
-      s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
+      s.add_dependency(%q<term-ansicolor>, [">= 1.0.6"])
+      s.add_dependency(%q<yard>, [">= 0.6.0"])
+      s.add_dependency(%q<rspec>, [">= 2.3.0"])
+      s.add_dependency(%q<jeweler>, [">= 1.6.4"])
       s.add_dependency(%q<rcov>, [">= 0"])
     end
   else
-    s.add_dependency(%q<term-ansicolor>, ["~> 1.0.6"])
-    s.add_dependency(%q<rspec>, ["~> 2.3.0"])
-    s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
+    s.add_dependency(%q<term-ansicolor>, [">= 1.0.6"])
+    s.add_dependency(%q<yard>, [">= 0.6.0"])
+    s.add_dependency(%q<rspec>, [">= 2.3.0"])
+    s.add_dependency(%q<jeweler>, [">= 1.6.4"])
     s.add_dependency(%q<rcov>, [">= 0"])
   end
 end
