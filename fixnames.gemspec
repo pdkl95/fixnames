@@ -5,24 +5,28 @@
 
 Gem::Specification.new do |s|
   s.name = "fixnames"
-  s.version = "0.2.1"
+  s.version = "0.2.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brent Sanders"]
-  s.date = "2011-09-13"
+  s.date = "2011-09-19"
   s.description = "Cleans up filenames so they can easily be used\nin scripts, without annoyances such as spaces or other bad characters"
   s.email = "git@thoughtnoise.net"
   s.executables = ["fixnames", "fixdirs"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
-    "README.md"
+    "README.md",
+    "README.rdoc"
   ]
   s.files = [
     ".document",
     ".rspec",
+    "COPYING",
     "LICENSE.txt",
     "README.md",
+    "README.rdoc",
     "Rakefile",
+    "VERSION",
     "bin/fixdirs",
     "bin/fixnames",
     "fixnames.gemspec",
@@ -46,7 +50,13 @@ Gem::Specification.new do |s|
     "spec/fixnames/semicolon_spec.rb",
     "spec/fixnames/whitespace_spec.rb",
     "spec/spec_helper.rb",
-    "spec/support/should_fix_helpers.rb"
+    "spec/support/should_fix_helpers.rb",
+    "test/helper.rb",
+    "test/test_charstrip.rb",
+    "test/test_hack_and.rb",
+    "test/test_lowercase.rb",
+    "test/test_semicolon.rb",
+    "test/test_whitespace.rb"
   ]
   s.homepage = "http://github.com/pdkl95/fixnames"
   s.licenses = ["MIT"]
