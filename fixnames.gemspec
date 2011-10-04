@@ -4,15 +4,16 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = "fixnames"
-  s.version = "0.2.2"
+  s.name = %q{fixnames}
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Brent Sanders"]
-  s.date = "2011-09-19"
-  s.description = "Cleans up filenames so they can easily be used\nin scripts, without annoyances such as spaces or other bad characters"
-  s.email = "git@thoughtnoise.net"
-  s.executables = ["fixnames", "fixdirs"]
+  s.authors = [%q{Brent Sanders}]
+  s.date = %q{2011-10-04}
+  s.description = %q{Cleans up filenames so they can easily be used
+in scripts, without annoyances such as spaces or other bad characters}
+  s.email = %q{git@thoughtnoise.net}
+  s.executables = [%q{fixnames}, %q{fixdirs}]
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.md",
@@ -58,11 +59,11 @@ Gem::Specification.new do |s|
     "test/test_semicolon.rb",
     "test/test_whitespace.rb"
   ]
-  s.homepage = "http://github.com/pdkl95/fixnames"
-  s.licenses = ["MIT"]
-  s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
-  s.summary = "Filename cleanup for script compatability"
+  s.homepage = %q{http://github.com/pdkl95/fixnames}
+  s.licenses = [%q{MIT}]
+  s.require_paths = [%q{lib}]
+  s.rubygems_version = %q{1.8.5}
+  s.summary = %q{Filename cleanup for script compatability}
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
@@ -72,20 +73,20 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<yard>, [">= 0.6.0"])
       s.add_development_dependency(%q<rspec>, [">= 2.3.0"])
       s.add_development_dependency(%q<jeweler>, [">= 1.6.4"])
-      s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<simplecov>, [">= 0"])
     else
       s.add_dependency(%q<term-ansicolor>, [">= 1.0.6"])
       s.add_dependency(%q<yard>, [">= 0.6.0"])
       s.add_dependency(%q<rspec>, [">= 2.3.0"])
       s.add_dependency(%q<jeweler>, [">= 1.6.4"])
-      s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<simplecov>, [">= 0"])
     end
   else
     s.add_dependency(%q<term-ansicolor>, [">= 1.0.6"])
     s.add_dependency(%q<yard>, [">= 0.6.0"])
     s.add_dependency(%q<rspec>, [">= 2.3.0"])
     s.add_dependency(%q<jeweler>, [">= 1.6.4"])
-    s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<simplecov>, [">= 0"])
   end
 end
 
