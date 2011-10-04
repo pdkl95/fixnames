@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe Fixnames::Filter do
+describe Fixnames::Filters do
   describe "#banners" do
     context "when TRUE" do
       before do
