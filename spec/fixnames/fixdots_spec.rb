@@ -11,6 +11,11 @@ describe Fixnames do
       it_should_fix 'file.name.txt'
     end
 
+    describe "should replace ALL early dots, recursively" do
+      subject { 'it_should_replace_it_even_with_all_these.dots' }
+      it_should_fix 'it.should.replace.it.even.with.all.these.dots'
+    end
+
     describe "should compress neighboring dots to a single character" do
       subject { 'file.txt' }
       it_should_fix 'file..txt', 'file...txt', 'file....txt'

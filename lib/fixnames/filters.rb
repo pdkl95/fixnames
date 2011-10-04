@@ -32,8 +32,10 @@ module Fixnames
     end
 
     def fix_dots
-      fixed.squeeze! '.'
+      last = fixed.rindex('.')
+      translate '.', '_'
       replace '(.*)\.(.*\.)', '\1_\2'
+      fixed[last] = '.' if last
     end
 
     def fix_dashes

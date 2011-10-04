@@ -141,7 +141,7 @@ if options.verbose > 2
 end
 
 filelist = ARGV
-filelist = ["."] if ARGV.length < 1
+filelist = Dir['*'] if ARGV.length < 1
 
 Fixnames::FixFile.fix_list! filelist, options
 
