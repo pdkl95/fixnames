@@ -37,12 +37,12 @@ end
 
 task :default => :spec
 
-# require 'yard'
-# YARD::Rake::YardocTask.new do |t|
-#   t.files = ['lib/**/*.rb']
-#   t.files += ['bin/*']
-#   #t.files += ['spec/**/*_spec.rb']
-#   #t.options += ['--plugin', 'yard-rspec']
-#   t.options += ['--markup', 'markdown']
-#   t.options += ['--debug']
-# end
+require 'yard'
+YARD::Rake::YardocTask.new do |t|
+  t.files = ['lib/**/*.rb']
+  t.files += ['bin/*']
+  #t.files += ['spec/**/*_spec.rb']
+  #t.options += ['--plugin', 'yard-rspec']
+  t.options += ['--markup', 'markdown']
+  t.options += ['--debug']
+end
