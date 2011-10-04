@@ -25,7 +25,7 @@ in scripts, without annoyances such as spaces or other bad characters}
   gem.add_development_dependency "yard", ">= 0.6.0"
   gem.add_development_dependency "rspec", ">= 2.3.0"
   gem.add_development_dependency "jeweler", ">= 1.6.4"
-  gem.add_development_dependency "rcov", ">= 0"
+  gem.add_development_dependency "simplecov", ">= 0"
 end
 Jeweler::RubygemsDotOrgTasks.new
 
@@ -33,11 +33,6 @@ require 'rspec/core'
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = FileList['spec/**/*_spec.rb']
-end
-
-RSpec::Core::RakeTask.new(:rcov) do |spec|
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
 end
 
 task :default => :spec
