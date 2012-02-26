@@ -172,13 +172,11 @@ module Fixnames
     end
 
     def expunge_common_prefix!
-      STDERR.puts "DWIM-WARN: No REGEX was given to -x/--expunge"
       pfx = Dir['*'].abbrev.keys.min_by{ |k| k.length }.chop
       if pfx && pfx.length > 0
+        STDERR.puts "DWIM-WARN: No REGEX was given to -x/--expunge"
         STDERR.puts "DWIM-WARN: Will expunge the common prefix: %r{^#{pfx}}"
         self.expunge = "^#{pfx}"
-      else
-        raise  RuntimeError, 'ERROR: No common prefixes found in $PWD/*'
       end
     end
   end
