@@ -1,3 +1,5 @@
+require 'abbrev'
+
 module Fixnames
   class Option
     # filters that MUST run early
@@ -159,5 +161,25 @@ module Fixnames
     # if set, we just pretend to work, and skip the final
     # move command, so the filesystem is never altered
     mkopt :pretend, [TrueClass, FalseClass], false
+
+
+    #################################################################
+
+    def all_flags=(val)
+      Fixnames::Option::FLAG_FILTERS.each do |f|
+        send(f, val)
+      end
+    end
+
+    def expunge_common_prefix!
+      STDERR.puts "DWIM-WARN: No REGEX was given to -x/--expunge"
+      pfx = Dir['*'].abbrev.keys.min_by{ |k| k.length }.chop
+      if pfx && pfx.length > 0
+        STDERR.puts "DWIM-WARN: Will expunge the common prefix: %r{^#{pfx}}"
+        self.expunge = "^#{pfx}"
+      else
+        raise  RuntimeError, 'ERROR: No common prefixes found in $PWD/*'
+      end
+    end
   end
 end

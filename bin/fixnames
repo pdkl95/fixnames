@@ -20,12 +20,17 @@ end
 optparse = OptionParser.new do |opts|
   opts.banner = $banner
   opts.define_head "Usage: #{$0} [options] <file> [<file> ... ]"
+  opts.summary_width = 24
+  opts.summary_indent = '  '
+
+  desc_pad = ' ' * (opts.summary_width + 3)
 
   opts.separator ''
-  opts.separator '  DIRECTORIES:'
+  opts.separator 'DIRECTORIES:'
 
   opts.on('-g', '--glob=GLOB_STRING',
-          'Filename glob inside each directory (default: #{options[:glob]})'
+          "Filename glob to use inside each directory for when
+#{desc_pad}we are left to ourself. Default: #{options.dir_glob}"
           ) { |val| options.dir_glob = val }
 
   opts.on('-R', '--[no-]recursive',
@@ -33,7 +38,7 @@ optparse = OptionParser.new do |opts|
           ) { |val| options.recursive = val }
 
   opts.separator ''
-  opts.separator '  FILTERS:'
+  opts.separator 'FILTERS:'
 
   opts.on('-A', '--[no-]hack_and',
           'Replace "&" with "_and_"'
@@ -52,11 +57,14 @@ optparse = OptionParser.new do |opts|
           ) { |val| options.brackets = val }
 
   opts.on('-k', '--[no-]checksums',
-         'Trims [0A1B2C3D] CRC32 checksums from names. ( [] or () )'
+         "Trims [0A1B2C3D] CRC32 bracket-wrapped checksums
+#{desc_pad}from names, when wrapped with square brackes []
+#{desc_pad}or round parens ()"
           ) { |val| options.checksums = val }
 
   opts.on('-d', '--[no-]dots',
-         'Trims excessive dots from files (before the .extention)'
+         'Trims excessive dots from files
+ (before the .extention)'
           ) { |val| options.fix_dots = val }
 
   opts.on('-D', '--[no-]dashes',
@@ -72,10 +80,11 @@ optparse = OptionParser.new do |opts|
           ) { |val| options.lowercase = val }
 
   opts.separator ''
-  opts.separator '  CHARACTERS:'
+  opts.separator 'CHARACTERS:'
 
-  opts.on('-w', '--whitespace=CHARLIST',
-          "Characters to treat as whitespace, to be replaced with underscores."
+  opts.on('-w', '--whitespace=CHARS',
+          "Characters to treat as whitespace, to be
+#{desc_pad}replaced with underscores."
           ) { |val| options.whitespace = val }
 
   opts.on('-W', '--no-whitespace',
@@ -83,7 +92,8 @@ optparse = OptionParser.new do |opts|
           ) {       options.whitespace = nil }
 
   opts.on('-s', '--strip=CHARLIST',
-          "Characters to strip from names. default: #{options.charstrip}"
+          "Individual characters to strip from names.
+#{desc_pad}Default: #{options.charstrip}"
           ) { |val| options.charstrip = val }
 
   opts.on('-S', '--no-strip',
@@ -91,29 +101,44 @@ optparse = OptionParser.new do |opts|
           ) {       options.charstrip = nil }
 
   opts.separator ''
-  opts.separator '  REGEX-REPLACE:'
+  opts.separator 'REGEX-REPLACE:'
 
-  opts.on('-x', '--expunge=REGEX',
-          'Expung a regexp from all filenames'
-          ) { |val| options.expunge = val }
+  opts.on('-x', '--expunge [REGEX]',
+          "Expung a regexp from all filenames. If a REGEX is
+#{desc_pad}not specified, it searches the current directory's
+#{desc_pad}filenames for a common prefix that can be removed."
+          ) do |val|
+    if val.nil?
+      options.expunge_common_prefix!
+    else
+      options.expunge = val
+    end
+  end
 
   opts.on('-r', '--replace=STRING',
-          'Replace expunged text with'
+          'Replace expunged text with the given STRING'
           ) { |val| options.mendstr = val }
 
   opts.separator ''
-  opts.separator '  COLLECTIONS:'
+  opts.separator 'COLLECTIONS:'
 
   opts.on('-f', '--full',
           'All filters are turned on!'
           ) do
-    Fixnames::Option::FLAG_FILTERS.each do |f|
-      options.send(f, true)
-    end
+    options.all_flags = true
+  end
+
+  opts.on('-M', '--max-autofix',
+          "All of --full plus standard options elsewhere.
+#{desc_pad}Should be mostly safe, as we do not clobber fixes
+#{desc_pad}when renaming, but could still be dangerous!"
+          ) do
+    options.all_flags = true
+    options.expunge_common_prefix! if options.expunge.nil?
   end
 
   opts.separator ''
-  opts.separator '  META:'
+  opts.separator 'META:'
 
   opts.on('-p', '--pretend',
           'Pretend to run; no filesystem changes are made'
@@ -144,5 +169,3 @@ filelist = ARGV
 filelist = Dir['*'] if ARGV.length < 1
 
 Fixnames::FixFile.fix_list! filelist, options
-
-

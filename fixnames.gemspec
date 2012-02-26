@@ -4,20 +4,18 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{fixnames}
-  s.version = "0.3.0"
+  s.name = "fixnames"
+  s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = [%q{Brent Sanders}]
-  s.date = %q{2011-10-04}
-  s.description = %q{Cleans up filenames so they can easily be used
-in scripts, without annoyances such as spaces or other bad characters}
-  s.email = %q{git@thoughtnoise.net}
-  s.executables = [%q{fixnames}, %q{fixdirs}]
+  s.authors = ["Brent Sanders"]
+  s.date = "2012-02-26"
+  s.description = "Cleans up filenames so they can easily be used\nin scripts, without annoyances such as spaces or other bad characters"
+  s.email = "git@thoughtnoise.net"
+  s.executables = ["fixnames", "fixdirs"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
-    "README.md",
-    "README.rdoc"
+    "README.md"
   ]
   s.files = [
     ".document",
@@ -25,9 +23,7 @@ in scripts, without annoyances such as spaces or other bad characters}
     "COPYING",
     "LICENSE.txt",
     "README.md",
-    "README.rdoc",
     "Rakefile",
-    "VERSION",
     "bin/fixdirs",
     "bin/fixnames",
     "fixnames.gemspec",
@@ -59,11 +55,11 @@ in scripts, without annoyances such as spaces or other bad characters}
     "test/test_semicolon.rb",
     "test/test_whitespace.rb"
   ]
-  s.homepage = %q{http://github.com/pdkl95/fixnames}
-  s.licenses = [%q{MIT}]
-  s.require_paths = [%q{lib}]
-  s.rubygems_version = %q{1.8.5}
-  s.summary = %q{Filename cleanup for script compatability}
+  s.homepage = "http://github.com/pdkl95/fixnames"
+  s.licenses = ["MIT"]
+  s.require_paths = ["lib"]
+  s.rubygems_version = "1.8.11"
+  s.summary = "Filename cleanup for script compatability"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
