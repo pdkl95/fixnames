@@ -8,6 +8,10 @@ module Fixnames
       replace '&', '_and_'
     end
 
+    def and_to_dash
+      replace '_and_', '-'
+    end
+
     def semicolon
       translate ';', '-'
       fixed.squeeze! '-'
