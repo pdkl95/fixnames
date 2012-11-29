@@ -3,22 +3,27 @@ require 'abbrev'
 module Fixnames
   class Option
     # filters that MUST run early
-    SETUP_FILTERS = [ :expunge ]
+    SETUP_FILTERS = [ :expunge, :brackets ]
 
     # filters that only accept a simple boolean on/off
     FLAG_FILTERS = [ :hack_and, :checksums, :banners,
-                     :brackets, :semicolon,
+                     :semicolon,
                      :camelcase, :lowercase,
-                     :fix_dots, :fix_dashes ]
+                     :fix_dots, :fix_dashes, :fix_numsep ]
 
     # filters that accept character ranges
     CHAR_FILTERS = [ :junkwords, :charstrip, :whitespace]
 
+    # filters that MUST run after everything else
+    LATE_FILTERS = [ :fix_numsep ]
+
     # standard order to apply the filters
-    DEFAULT_FILTER_ORDER = [ SETUP_FILTERS,
-                             FLAG_FILTERS,
-                             CHAR_FILTERS
-                           ].flatten
+    DEFAULT_FILTER_ORDER = [
+      SETUP_FILTERS,
+      FLAG_FILTERS,
+      CHAR_FILTERS,
+      LATE_FILTERS
+    ].flatten
 
     DEFAULT_DIR_GLOB   = '*'
     DEFAULT_MENDSTR    = ''
@@ -40,6 +45,9 @@ module Fixnames
       var = "@#{name}"
 
       define_method "valid_for_#{name}?" do |value|
+        value = nil if value == false
+        return true if value.nil?
+        return true if value == ''
         types.map do |type|
           value.is_a?(type)
         end.reduce(false) do |t,x|
@@ -121,6 +129,9 @@ module Fixnames
 
     # @note Enables {Fixnames::Filters#fix_dashes}
     mkopt :fix_dashes, [TrueClass, FalseClass], false
+
+    # @note Enables {Fixnames::Filters#fix_dashes}
+    mkopt :fix_numsep, [TrueClass, FalseClass], false
 
     # @note Enables {Fixnames::Filters#camelcase}
     mkopt :camelcase, [TrueClass, FalseClass], false

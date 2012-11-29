@@ -29,76 +29,103 @@ optparse = OptionParser.new do |opts|
   opts.separator 'DIRECTORIES:'
 
   opts.on('-g', '--glob=GLOB_STRING',
-          "Filename glob to use inside each directory for when
+       "Filename glob to use inside each directory for when
 #{desc_pad}we are left to ourself. Default: #{options.dir_glob}"
           ) { |val| options.dir_glob = val }
 
   opts.on('-R', '--[no-]recursive',
-          'Recursively descend into directories'
+       'Recursively descend into directories'
           ) { |val| options.recursive = val }
 
   opts.separator ''
   opts.separator 'FILTERS:'
 
   opts.on('-A', '--[no-]hack_and',
-          'Replace "&" with "_and_"'
+       'Replace "&" with "_and_"'
           ) { |val| options.hack_and = val }
 
   opts.on('-C', '--[no-]semicolon',
-          'Replace ";" with "-"'
+       'Replace ";" with "-"'
           ) { |val| options.semicolon = val }
 
   opts.on('-B', '--[no-]banners',
-          'Trims [FOO] style advert prefixs from the beginning'
+       'Trims [FOO] style advert prefixs from the beginning'
           ) { |val| options.banners = val }
 
-  opts.on('-b', '--[no-]brackets',
-         'Trims (round) or [square] bracket regions'
-          ) { |val| options.brackets = val }
-
   opts.on('-k', '--[no-]checksums',
-         "Trims [0A1B2C3D] CRC32 bracket-wrapped checksums
+       "Trims [0A1B2C3D] CRC32 bracket-wrapped checksums
 #{desc_pad}from names, when wrapped with square brackes []
 #{desc_pad}or round parens ()"
           ) { |val| options.checksums = val }
 
   opts.on('-d', '--[no-]dots',
-         'Trims excessive dots from files
+       'Trims excessive dots from files
  (before the .extention)'
           ) { |val| options.fix_dots = val }
 
   opts.on('-D', '--[no-]dashes',
-         'Trims redundant dashes, and leading/trailing dashes'
+       'Trims redundant dashes, and leading/trailing dashes'
           ) { |val| options.fix_dashes = val }
 
+  opts.on('-N', '--[no-]numsep',
+       'Fixes the separator afterinitial numbers. That is,
+#{desc_pad}it replaces ^(\d+)_ with ^(\d+)-"'
+          ) { |val| options.fix_numsep = val }
+
   opts.on('-c', '--[no-]camelcase',
-          'Undo camelCase with underscores. "aB" becomes "a_b"'
+       'Undo camelCase with underscores. "aB" becomes "a_b"'
           ) { |val| options.camelcase = val }
 
   opts.on('-l', '--[no-]lowercase',
-          'Forces all letters to lowercase'
+       'Forces all letters to lowercase'
           ) { |val| options.lowercase = val }
 
   opts.separator ''
   opts.separator 'CHARACTERS:'
 
+  opts.on('-b', '--[no-]brackets',
+       "Trims matching bracket, replacing with a \"-\" or
+#{desc_pad}nothing if at the beginning of end of the name;
+#{desc_pad}characters that count as a bracket defined with
+#{desc_pad}the options --bracken-open and --br-close"
+        ) { |val| options.brackets = val }
+
+  opts.on('-O', '--br-open=CHARS',
+       "Characters that count as the 'opening' half of a
+#{desc_pad}bracket pair. Much be the same number of chars
+#{desc_pad}as --br-close. The order in BOTH of these
+#{desc_pad}options determines the pairing between open and
+#{desc_pad}close, in a manner very similar tr(1).
+#{desc_pad}Default: #{options.bracket_characters_close}"
+        ) { |val| options.bracket_characters_open = val }
+
+  opts.on('-L', '--br-close=CHARS',
+       "Characters that count as the 'opening' half of a
+#{desc_pad}bracket pair. Much be the same number of chars
+#{desc_pad}as --br-close. The order in BOTH of these
+#{desc_pad}options determines the pairing between open and
+#{desc_pad}close, in a manner very similar tr(1).
+#{desc_pad}Default: #{options.bracket_characters_close}"
+        ) { |val| options.bracket_characters_close = val }
+
   opts.on('-w', '--whitespace=CHARS',
-          "Characters to treat as whitespace, to be
+       "Characters to treat as whitespace, to be
 #{desc_pad}replaced with underscores."
           ) { |val| options.whitespace = val }
 
   opts.on('-W', '--no-whitespace',
-          'Do not parse any character as whitespace'
+       'Do not parse any character as whitespace'
           ) {       options.whitespace = nil }
 
-  opts.on('-s', '--strip=CHARLIST',
-          "Individual characters to strip from names.
+  opts.on('-s', '--[no-]strip=CHARLIST',
+       "Individual characters to strip from names.
 #{desc_pad}Default: #{options.charstrip}"
           ) { |val| options.charstrip = val }
 
-  opts.on('-S', '--no-strip',
-          'Do not strip any specific characters'
-          ) {       options.charstrip = nil }
+  opts.on('-j', '--[no-]junkwords=WORDLIST',
+       "Words to always strip, separated by commas.
+#{desc_pad}Default: #{options.junkwords.join(',')}"
+          ) {       options.junkwords = nil }
 
   opts.separator ''
   opts.separator 'REGEX-REPLACE:'

@@ -24,7 +24,13 @@ module Fixnames
     end
 
     def brackets
-      remove wrap_brackets('.+?')
+      bop = option.bracket_characters_open.dup
+      bcl = option.bracket_characters_close.dup
+      while bop.length > 0
+        op = "%03o" % bop.slice!(0,1).bytes.first
+        cl = "%03o" % bcl.slice!(0,1).bytes.first
+        replace "\\#{op}(.+?)\\#{cl}", '-\\1-'
+      end
     end
 
     def checksums
@@ -46,6 +52,10 @@ module Fixnames
       fixed.squeeze! '-'
       remove  '^-' while fixed =~ /^-/
       remove  '-$' while fixed =~ /-$/
+    end
+
+    def fix_numsep
+      replace '^(\d+)_', '\1-'
     end
 
     def camelcase
