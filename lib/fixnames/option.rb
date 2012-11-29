@@ -7,19 +7,36 @@ module Fixnames
     MAX_FILTER_LOOPS = 6
 
     # filters that MUST run early
-    SETUP_FILTERS = [ :expunge, :brackets ]
+    SETUP_FILTERS = [
+      :expunge,
+      :brackets
+    ]
 
     # filters that only accept a simple boolean on/off
-    FLAG_FILTERS = [ :hack_and, :checksums, :banners,
-                     :semicolon,
-                     :camelcase, :lowercase,
-                     :fix_dots, :fix_dashes, :fix_numsep ]
+    FLAG_FILTERS = [
+      :hack_and,
+      :and_to_dash,
+      :checksums,
+      :banners,
+      :semicolon,
+      :camelcase,
+      :lowercase,
+      :fix_dots,
+      :fix_dashes,
+      :fix_numsep
+    ]
 
     # filters that accept character ranges
-    CHAR_FILTERS = [ :junkwords, :charstrip, :whitespace]
+    CHAR_FILTERS = [
+      :junkwords,
+      :charstrip,
+      :whitespace
+    ]
 
     # filters that MUST run after everything else
-    LATE_FILTERS = [ :fix_numsep ]
+    LATE_FILTERS = [
+      :fix_numsep
+    ]
 
     # standard order to apply the filters
     DEFAULT_FILTER_ORDER = [
@@ -65,7 +82,7 @@ module Fixnames
         end
         if args.length == 1
           unless send("valid_for_#{name}?", args[0])
-            raise "bad type for option"
+            raise ArgumentError, "bad type for option"
           end
           instance_variable_set(var, args[0])
         end
@@ -74,7 +91,7 @@ module Fixnames
 
       define_method "#{name}=" do |value|
         unless send("valid_for_#{name}?", value)
-          raise "bad type for option"
+          raise ArgumentError, "bad type for option"
         end
         instance_variable_set(var, value)
       end
@@ -97,7 +114,7 @@ module Fixnames
     # * `verbose=1` ; only names that change are output
     # * `verbose=2` ; all names are output with their change-status
     # * `verbose=3` ; all *filters* are output as they run for debugging. Very noisy.
-    mkopt :verbose, Integer, 3
+    mkopt :verbose, Integer, 0
 
     # @note The maximum number of times a {Fixname::Filters} will be applied before giving and proceeding with the next filter (infinite-loop protextion)
     mkopt :max_filter_loops, Integer, MAX_FILTER_LOOPS
@@ -118,6 +135,9 @@ module Fixnames
 
     # @note Enables {Fixnames::Filters#hack_and}
     mkopt :hack_and,  [TrueClass, FalseClass], false
+
+    # @note Enables {Fixnames::Filters#hack_and}
+    mkopt :and_to_dash,  [TrueClass, FalseClass], false
 
     # @note Enables {Fixnames::Filters#checksums}
     mkopt :checksums, [TrueClass, FalseClass], false

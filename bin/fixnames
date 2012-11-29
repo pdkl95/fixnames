@@ -40,8 +40,12 @@ optparse = OptionParser.new do |opts|
   opts.separator ''
   opts.separator 'FILTERS:'
 
-  opts.on('-A', '--[no-]hack_and',
+  opts.on('-H', '--[no-]hack-and',
        'Replace "&" with "_and_"'
+          ) { |val| options.hack_and = val }
+
+  opts.on('-A', '--[no-]and-to-dash',
+       'Replace "_and_" with "-"'
           ) { |val| options.hack_and = val }
 
   opts.on('-C', '--[no-]semicolon',

@@ -9,7 +9,7 @@ module Fixnames
     end
 
     def and_to_dash
-      replace '_and_', '-'
+      replace '[-_ ]+and[-_ ]+', '-'
     end
 
     def semicolon
