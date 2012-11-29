@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "fixnames"
-  s.version = "0.4.1"
+  s.version = "0.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brent Sanders"]
-  s.date = "2012-02-26"
+  s.date = "2012-11-29"
   s.description = "Cleans up filenames so they can easily be used\nin scripts, without annoyances such as spaces or other bad characters"
   s.email = "git@thoughtnoise.net"
   s.executables = ["fixnames", "fixdirs"]
@@ -36,17 +36,23 @@ Gem::Specification.new do |s|
     "lib/fixnames/interface.rb",
     "lib/fixnames/option.rb",
     "lib/fixnames/version.rb",
+    "spec/fixnames/and_to_dash_spec.rb",
+    "spec/fixnames/badopt_spec.rb",
     "spec/fixnames/banners_spec.rb",
     "spec/fixnames/brackets_spec.rb",
     "spec/fixnames/camelcase_spec.rb",
     "spec/fixnames/charstrip_spec.rb",
     "spec/fixnames/checksums_spec.rb",
+    "spec/fixnames/dashes_spec.rb",
+    "spec/fixnames/expunge_spec.rb",
     "spec/fixnames/fixdots_spec.rb",
     "spec/fixnames/hack_and_spec.rb",
     "spec/fixnames/lowercase_spec.rb",
+    "spec/fixnames/numsep_spec.rb",
     "spec/fixnames/semicolon_spec.rb",
     "spec/fixnames/whitespace_spec.rb",
     "spec/spec_helper.rb",
+    "spec/support/option_setting_helpers.rb",
     "spec/support/should_fix_helpers.rb",
     "test/helper.rb",
     "test/test_charstrip.rb",
@@ -58,7 +64,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/pdkl95/fixnames"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.11"
+  s.rubygems_version = "1.8.23"
   s.summary = "Filename cleanup for script compatability"
 
   if s.respond_to? :specification_version then
