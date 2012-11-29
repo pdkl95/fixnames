@@ -1,7 +1,12 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Fixnames do
-  context "when option[:whitespace] is non-nil" do
+  context "when only option[:whitespace] is non-nil" do
+    before do
+      @testopt.fix_dashes = false
+      @testopt.whitespace = Fixnames::Option::DEFAULT_WHITESPACE
+    end
+
     describe "should preserve simple names" do
       it_should_not_change 'abc', 'a-b', 'a.b'
     end
@@ -23,6 +28,11 @@ describe Fixnames do
     describe "should collapse multiple spaces" do
       subject { 'a_b' }
       it_should_fix 'a  b', 'a   b', 'a    b'
+    end
+
+    describe "should collapse dash-underscore pairs to a dash" do
+      subject { 'a-b' }
+      it_should_fix 'a-_b', 'a_-b', 'a_-_b'
     end
 
     describe "should collapse multiple underscores to a single character" do
@@ -51,9 +61,9 @@ describe Fixnames do
 
     describe "should remove whitespace preceding a dot" do
       subject { 'a.b' }
-      it_should_fix  'a .b',   'a_.b',   'a-.b'
-      it_should_fix 'a  .b',  'a _.b',  'a_ .b'
-      it_should_fix 'a__.b', 'a _ .b', 'a- _.b'
+      it_should_fix  'a .b',   'a_.b'
+      it_should_fix 'a  .b',  'a _.b'
+      it_should_fix 'a__.b', 'a _ .b'
     end
 
     describe "should remove whitespace around a single dash" do

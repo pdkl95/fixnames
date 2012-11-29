@@ -50,8 +50,13 @@ module Fixnames
 
     def fix_dashes
       fixed.squeeze! '-'
-      remove  '^-' while fixed =~ /^-/
-      remove  '-$' while fixed =~ /-$/
+      replace_all '--', '-'
+
+      remove_all  '^-'
+      remove_all  '-$'
+
+      replace_all '-\.', '.'
+      replace_all '\.-', '.'
     end
 
     def fix_numsep
@@ -73,11 +78,15 @@ module Fixnames
 
     def whitespace(chrlist)
       replace "[#{Regexp.escape chrlist}]", '_'
-      replace '[_-]\.', '.' while fixed =~ /[_-]\./
-      replace '_-',     '-' while fixed =~ /_-/
-      replace '-_',     '-' while fixed =~ /-_/
-      remove  '^_'          while fixed =~ /^_/
-      remove  '_$'          while fixed =~ /_$/
+
+      remove_all '^_'
+      remove_all '_$'
+
+      replace_all  '_-', '-'
+      replace_all  '-_', '-'
+      replace_all '_\.', '.'
+      replace_all '\._', '.'
+
       fixed.squeeze! '_'
     end
 

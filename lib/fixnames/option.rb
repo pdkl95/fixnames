@@ -2,6 +2,10 @@ require 'abbrev'
 
 module Fixnames
   class Option
+    # the maximum number of times we will allow a filter
+    # to be applied before giving up and moving on to the next
+    MAX_FILTER_LOOPS = 6
+
     # filters that MUST run early
     SETUP_FILTERS = [ :expunge, :brackets ]
 
@@ -30,7 +34,7 @@ module Fixnames
     DEFAULT_WHITESPACE = " \t_"
     DEFAULT_BRACKET_CHARACTERS_OPEN  = '[({<'
     DEFAULT_BRACKET_CHARACTERS_CLOSE = '])}>'
-    DEFAULT_CHARSTRIP = "[]{}'\",()+!~@#/\\"
+    DEFAULT_CHARSTRIP = "[]{}'\",()+!~@#/\\<>"
     DEFAULT_JUNKWORDS = [ 'x264', 'hdtv', '2hd', '720p', 'dvdrip']
     DEFAULT_BANNER_TYPES = [ 'xxx', 'dvdrip', 'dual_audio',
                              'xvid', 'h264', 'divx' ]
@@ -93,7 +97,10 @@ module Fixnames
     # * `verbose=1` ; only names that change are output
     # * `verbose=2` ; all names are output with their change-status
     # * `verbose=3` ; all *filters* are output as they run for debugging. Very noisy.
-    mkopt :verbose, Integer, 0
+    mkopt :verbose, Integer, 3
+
+    # @note The maximum number of times a {Fixname::Filters} will be applied before giving and proceeding with the next filter (infinite-loop protextion)
+    mkopt :max_filter_loops, Integer, MAX_FILTER_LOOPS
 
     # When {#recursive} is set, use this pattern to glob each
     # directory for files.
