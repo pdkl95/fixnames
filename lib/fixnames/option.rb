@@ -212,9 +212,10 @@ module Fixnames
     def expunge_common_prefix!
       pfx = Dir['*'].abbrev.keys.min_by{ |k| k.length }.chop
       if pfx && pfx.length > 0
+        re = "^#{Regexp.escape(pfx)}"
         STDERR.puts "DWIM-WARN: No REGEX was given to -x/--expunge"
-        STDERR.puts "DWIM-WARN: Will expunge the common prefix: %r{^#{pfx}}"
-        self.expunge = "^#{pfx}"
+        STDERR.puts "DWIM-WARN: Will expunge the common prefix: %r{#{re}}"
+        self.expunge = re
       end
     end
   end

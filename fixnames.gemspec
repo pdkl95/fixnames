@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "fixnames"
-  s.version = "0.5.0"
+  s.version = "0.5.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brent Sanders"]
-  s.date = "2012-11-29"
+  s.date = "2013-02-25"
   s.description = "Cleans up filenames so they can easily be used\nin scripts, without annoyances such as spaces or other bad characters"
   s.email = "git@thoughtnoise.net"
   s.executables = ["fixnames", "fixdirs"]
